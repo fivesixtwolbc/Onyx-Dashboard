@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onyx Hub: The 36-Month Strategy</title>
+    <title>Onyx Hub: The Full Lifecycle</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -17,26 +17,29 @@
         
         .info-box { background-color: rgba(0, 229, 255, 0.05); border-left: 5px solid var(--onyx-blue); padding: 20px; margin-bottom: 30px; border-radius: 4px; }
         
+        .section-header { font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; border-left: 3px solid #444; padding-left: 10px; }
+
         .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #333; }
-        label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.8rem; color: var(--text-dim); letter-spacing: 1px; }
         input[type="range"] { width: 100%; accent-color: var(--onyx-blue); cursor: pointer; }
         .val { font-weight: bold; color: var(--onyx-blue); font-size: 1.1rem; }
 
-        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .metric-card { background: var(--card-bg); padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #2a2a2a; }
-        .m-label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; }
-        .m-value { font-size: 1.6rem; font-weight: bold; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .metric-card { background: var(--card-bg); padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #2a2a2a; transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); border-color: #444; }
+        .m-label { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; }
+        .m-value { font-size: 1.5rem; font-weight: bold; }
 
-        .tax-lesson { background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px dashed #444; margin-bottom: 30px; font-size: 0.9rem; color: var(--text-dim); }
-        .tax-lesson b { color: var(--onyx-green); }
+        .tax-lesson { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px dashed #444; margin-bottom: 30px; font-size: 0.85rem; color: var(--text-dim); }
 
         .table-container { max-height: 400px; overflow-y: auto; background: var(--card-bg); border-radius: 8px; margin-top: 30px; border: 1px solid #333; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th { position: sticky; top: 0; background: #2a2a2a; padding: 12px; font-size: 0.8rem; color: var(--text-dim); z-index: 10; }
         td { padding: 12px; border-bottom: 1px solid #222; font-size: 0.85rem; }
 
-        .reasoning-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; padding: 30px; background: #161616; border-radius: 12px; }
-        .reason-box h3 { margin-top: 0; color: var(--onyx-blue); }
+        .reasoning-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; padding: 30px; background: #161616; border-radius: 12px; border: 1px solid #333; }
+        .reason-box h3 { margin-top: 0; color: var(--onyx-blue); font-size: 1.1rem; }
+        .reason-box ul { padding-left: 20px; font-size: 0.9rem; color: var(--text-dim); }
         
         @media (max-width: 768px) { .reasoning-grid { grid-template-columns: 1fr; } }
     </style>
@@ -46,18 +49,18 @@
 <div class="container">
     <header>
         <h1>⚡ Onyx Hub: Strategy Execution</h1>
-        <p>Start Date: April 15, 2026 | First Payment: May 15, 2026</p>
+        <p>Phase 1: April 2026 Baseline | Phase 2: April 2029 Completion</p>
     </header>
 
     <div class="info-box" id="strategyKey"></div>
 
     <div class="tax-lesson">
-        <b>💡 Why the Tax Bracket Matters:</b> Interest earned in an HYSA is taxed as "Ordinary Income," exactly like your salary. If you earn $100 in interest but fall into a 33% combined bracket (Federal + CA State), the bank gives you $100, but you effectively only keep <b>$67</b> after tax season. This dashboard uses your <b>Effective APY</b> to show the "real" money that stays in your pocket.
+        💡 <b>Tax Insight:</b> We are modeling a <b>33% tax bracket</b>. This means for every $100 the bank pays you, we assume <b>$33</b> is set aside for the IRS/State, leaving <b>$67</b> in "Real Yield."
     </div>
 
     <div class="controls">
         <div>
-            <label>Monthly Hub Contribution: $<span id="repVal" class="val">600</span></label>
+            <label>Monthly Hub Replenishment: $<span id="repVal" class="val">600</span></label>
             <input type="range" id="repInput" min="450" max="650" value="600" step="10">
         </div>
         <div>
@@ -74,21 +77,38 @@
         </div>
     </div>
 
-    <div class="metrics">
+    <div class="section-header">Starting Position (April 2026)</div>
+    <div class="metrics-grid">
         <div class="metric-card">
-            <div class="m-label">Payment Hub (Mo 36)</div>
+            <div class="m-label">Initial Payment Hub</div>
+            <div id="start-hysa" class="m-value" style="color: var(--onyx-blue);">$22,000.00</div>
+        </div>
+        <div class="metric-card">
+            <div class="m-label">Initial Savings Booster</div>
+            <div id="start-sav" class="m-value" style="color: var(--onyx-gold);">$25,000.00</div>
+        </div>
+        <div class="metric-card">
+            <div class="m-label">Total Combined Liquidity</div>
+            <div id="start-total" class="m-value" style="color: var(--onyx-green);">$47,000.00</div>
+        </div>
+    </div>
+
+    <div class="section-header">Projected Outcome (April 2029)</div>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="m-label">Final Payment Hub</div>
             <div id="m-hysa" class="m-value" style="color: var(--onyx-blue);">$0</div>
         </div>
         <div class="metric-card">
-            <div class="m-label">Savings Booster (Mo 36)</div>
+            <div class="m-label">Final Savings Booster</div>
             <div id="m-sav" class="m-value" style="color: var(--onyx-gold);">$0</div>
         </div>
         <div class="metric-card">
-            <div class="m-label">Total Capital Pool</div>
+            <div class="m-label">Final Total Liquidity</div>
             <div id="m-total" class="m-value" style="color: var(--onyx-green);">$0</div>
         </div>
         <div class="metric-card">
-            <div class="m-label">Net Strategy Gain</div>
+            <div class="m-label">Total After-Tax Profit</div>
             <div id="m-profit" class="m-value" style="color: var(--onyx-green);">$0</div>
         </div>
     </div>
@@ -113,20 +133,16 @@
 
     <div class="reasoning-grid">
         <div class="reason-box">
-            <h3>Option A: The "Single Hub"</h3>
-            <p>Combine all <b>$47,000</b> into a single Amex HYSA at <b>3.25% APY</b>.</p>
+            <h3>Why Keep the $25k Separate?</h3>
             <ul>
-                <li><b>Pros:</b> Ultimate simplicity. One login, one 1099-INT tax form, and a massive "Snowball" effect as interest builds on the larger balance.</li>
-                <li><b>Cons:</b> You are capped at Amex's rate. You lose out on the "yield spread" offered by more aggressive online banks.</li>
+                <li><b>Visual Protection:</b> Caitlynn can see the Gold line (Savings) always moving up, independent of the car.</li>
+                <li><b>Account Clarity:</b> You never have to guess which portion of the bank balance is "safe" vs "car money."</li>
+                <li><b>Yield Independence:</b> You can move the $25k to a higher-rate bank without breaking the Payment Hub automation.</li>
             </ul>
         </div>
         <div class="reason-box">
-            <h3>Option B: The "Dual Track"</h3>
-            <p>Keep <b>$22k</b> in Amex (Hub) and <b>$25k</b> in a high-yield hunter (e.g., Wealthfront) at <b>~4.25% APY</b>.</p>
-            <ul>
-                <li><b>Pros:</b> Better math. That extra 1% on your $25k savings adds roughly <b>$750+</b> in pure profit over the 36 months.</li>
-                <li><b>Cons:</b> Slightly higher "mental load." You have to track two separate accounts and ensure the Hub never runs dry.</li>
-            </ul>
+            <h3>The Arbitrage Reality</h3>
+            <p>At 0.9% APR, your car loan is essentially <b>"Free Money"</b> in this inflation environment. By holding your cash in an HYSA instead of paying off the car, the bank is paying you to drive the Forester.</p>
         </div>
     </div>
 </div>
@@ -134,7 +150,7 @@
 <script>
     const loanPrincipal = 38500, loanApr = 0.009, loanMonths = 36, monthlyPay = 1084.31;
     const hubStart = 22000, hubApy = 0.0325, carStart = 35500, carDep = 0.15;
-    const startDt = new Date(2026, 3, 15); // April 15, 2026
+    const startDt = new Date(2026, 3, 15);
     let chart;
 
     function format(n) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n); }
@@ -144,18 +160,20 @@
         const tax = parseFloat(document.getElementById('taxInput').value) / 100;
         const savStart = parseFloat(document.getElementById('savInput').value);
         const apy2 = parseFloat(document.getElementById('apy2Input').value) / 100;
-        
         const effApy1 = hubApy * (1 - tax);
         const effApy2 = apy2 * (1 - tax);
 
         let curL = loanPrincipal, curH = hubStart, curS = savStart, curC = carStart;
         let tLoanInt = 0, tHubInt = 0, tSavInt = 0;
         let data = { labels: [], loan: [], hysa: [], sav: [], total: [], car: [] };
-        
         const tbody = document.querySelector('#mainTable tbody');
         tbody.innerHTML = '';
 
-        // Month 0: April (Baseline)
+        // Update Starting Metric Boxes
+        document.getElementById('start-sav').innerText = format(savStart);
+        document.getElementById('start-total').innerText = format(hubStart + savStart);
+
+        // Month 0 (April 2026)
         addPoint("Apr 15, 2026", curL, curC, curH, curS);
 
         for (let i = 1; i <= loanMonths; i++) {
@@ -195,10 +213,10 @@
         document.getElementById('m-profit').innerText = format(tHubInt + tSavInt - tLoanInt);
         
         document.getElementById('strategyKey').innerHTML = `
-            <strong>🔑 Strategic Summary</strong><br>
-            • Starting Capital (April 2026): ${format(hubStart + savStart)}<br>
-            • Total Loan Interest to be Paid: <span style="color:var(--onyx-purple)">${format(tLoanInt)}</span><br>
-            • Total After-Tax Interest Earned: <span style="color:var(--onyx-green)">${format(tHubInt + tSavInt)}</span>
+            <strong>🔑 Executive Summary</strong><br>
+            • Strategy Lifespan: 36 Months<br>
+            • Cost of Debt (Total Interest): <span style="color:var(--onyx-purple)">${format(tLoanInt)}</span><br>
+            • Total After-Tax Passive Gain: <span style="color:var(--onyx-green)">${format(tHubInt + tSavInt)}</span>
         `;
 
         const ctx = document.getElementById('crossoverChart').getContext('2d');
