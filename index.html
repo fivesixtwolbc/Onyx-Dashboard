@@ -17,17 +17,21 @@
         
         .info-box { background-color: rgba(0, 229, 255, 0.05); border-left: 5px solid var(--onyx-blue); padding: 20px; margin-bottom: 30px; border-radius: 4px; }
         
-        .section-header { font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin: 30px 0 15px 0; border-left: 3px solid #444; padding-left: 10px; }
+        .section-header { font-size: 0.9rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin: 40px 0 15px 0; border-left: 3px solid #444; padding-left: 10px; }
 
         .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #333; }
         label { display: block; margin-bottom: 8px; font-size: 0.8rem; color: var(--text-dim); letter-spacing: 1px; }
         input[type="range"] { width: 100%; accent-color: var(--onyx-blue); cursor: pointer; }
         .val { font-weight: bold; color: var(--onyx-blue); font-size: 1.1rem; }
 
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
-        .metric-card { background: var(--card-bg); padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #2a2a2a; }
-        .m-label { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 10px; text-transform: uppercase; }
-        .m-value { font-size: 1.5rem; font-weight: bold; }
+        /* Summary Tables Styling */
+        .summary-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .sum-table-box { background: var(--card-bg); border-radius: 8px; border: 1px solid #333; overflow: hidden; }
+        .sum-table-box h4 { background: #2a2a2a; margin: 0; padding: 10px 15px; font-size: 0.8rem; color: var(--onyx-silver); text-transform: uppercase; }
+        .sum-table { width: 100%; border-collapse: collapse; }
+        .sum-table td { padding: 12px 15px; border-bottom: 1px solid #2a2a2a; font-size: 0.9rem; }
+        .sum-table tr:last-child td { border-bottom: none; font-weight: bold; color: var(--onyx-green); }
+        .sum-label { color: var(--text-dim); }
 
         .tax-lesson { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px dashed #444; margin-bottom: 30px; font-size: 0.85rem; color: var(--text-dim); }
 
@@ -40,11 +44,11 @@
         .con-label { color: var(--onyx-purple); font-weight: bold; }
 
         .table-container { max-height: 400px; overflow-y: auto; background: var(--card-bg); border-radius: 8px; border: 1px solid #333; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
+        table.main-table { width: 100%; border-collapse: collapse; text-align: left; }
         th { position: sticky; top: 0; background: #2a2a2a; padding: 12px; font-size: 0.8rem; color: var(--text-dim); z-index: 10; }
         td { padding: 12px; border-bottom: 1px solid #222; font-size: 0.85rem; }
         
-        @media (max-width: 800px) { .comparison-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 800px) { .comparison-grid, .summary-tables { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -52,7 +56,7 @@
 <div class="container">
     <header>
         <h1>⚡ Onyx Hub: Strategic Execution</h1>
-        <p>Phase 1: April 2026 Baseline | Phase 2: April 2029 Completion</p>
+        <p>Comparison Logic: April 2026 vs April 2029</p>
     </header>
 
     <div class="info-box" id="strategyKey"></div>
@@ -76,50 +80,50 @@
         </div>
     </div>
 
-    <div class="metrics-grid">
-        <div class="metric-card">
-            <div class="m-label">Initial Combined Liquidity</div>
-            <div id="start-total" class="m-value" style="color: var(--onyx-silver);">$47,000.00</div>
+    <div class="summary-tables">
+        <div class="sum-table-box">
+            <h4>Month 0: Starting Position (April 2026)</h4>
+            <table class="sum-table">
+                <tr><td class="sum-label">Payment Hub ($22k Base)</td><td id="start-hysa-row">$22,000.00</td></tr>
+                <tr><td class="sum-label">Savings Booster ($25k Base)</td><td id="start-sav-row">$25,000.00</td></tr>
+                <tr><td class="sum-label">Net Passive Liquidity</td><td id="start-total-row">$47,000.00</td></tr>
+            </table>
         </div>
-        <div class="metric-card">
-            <div class="m-label">Final Total Liquidity</div>
-            <div id="m-total" class="m-value" style="color: var(--onyx-green);">$0</div>
-        </div>
-        <div class="metric-card">
-            <div class="m-label">Total After-Tax Profit</div>
-            <div id="m-profit" class="m-value" style="color: var(--onyx-green);">$0</div>
+        <div class="sum-table-box">
+            <h4>Month 36: Projected Outcome (April 2029)</h4>
+            <table class="sum-table">
+                <tr><td class="sum-label">Payment Hub Final</td><td id="end-hysa-row">$0.00</td></tr>
+                <tr><td class="sum-label">Savings Booster Final</td><td id="end-sav-row">$0.00</td></tr>
+                <tr><td class="sum-label">Net Final Liquidity</td><td id="end-total-row">$0.00</td></tr>
+            </table>
         </div>
     </div>
 
     <canvas id="crossoverChart" height="120"></canvas>
 
-    <div class="section-header">Comparison Analysis</div>
+    <div class="section-header">Decision Framework</div>
     <div class="comparison-grid">
         <div class="comparison-box">
             <h3>Option A: The Consolidated Master Pool</h3>
-            <p style="font-size: 0.8rem; color: var(--text-dim);">Move all <b>$47,000</b> into a single Amex HYSA.</p>
             <ul>
-                <li><span class="pro-label">PRO:</span> <b>Operational Simplicity.</b> One account, one 1099 form, and easier to automate the $600/mo replenishment.</li>
-                <li><span class="pro-label">PRO:</span> <b>Higher Liquidity Visibility.</b> Seeing $40k+ in one place feels more secure than two smaller accounts.</li>
-                <li><span class="con-label">CON:</span> <b>Yield Lock.</b> You are tied to Amex's rate. If other banks offer 4.5%+, you lose the extra income on your $25k cushion.</li>
-                <li><span class="con-label">CON:</span> <b>Mental Blurring.</b> It’s harder to distinguish between "Untouchable Car Money" and "Emergency Savings."</li>
+                <li><span class="pro-label">PRO:</span> <b>Operational Simplicity.</b> One account, one login, and one tax form to track at the end of the year.</li>
+                <li><span class="pro-label">PRO:</span> <b>Total Visibility.</b> Seeing $47k+ in one balance provides a high level of "Emergency Security."</li>
+                <li><span class="con-label">CON:</span> <b>Yield Lock.</b> If another bank offers a higher rate (4.25%+) on the $25k, you lose that extra income by staying 100% in Amex.</li>
             </ul>
         </div>
         <div class="comparison-box">
             <h3>Option B: The Dual-Track Strategy</h3>
-            <p style="font-size: 0.8rem; color: var(--text-dim);">Separate <b>$22k</b> (Amex) and <b>$25k</b> (High-Yield Hunter).</p>
             <ul>
-                <li><span class="pro-label">PRO:</span> <b>Yield Optimization.</b> Moving the $25k to a 4.25% account captures an extra 1% "Yield Spread" (approx. <b>$750+ profit</b>).</li>
-                <li><span class="pro-label">PRO:</span> <b>Psychological Moat.</b> The $25k Gold Line on your chart never dips. It is emotionally "safe" from the car payments.</li>
-                <li><span class="con-label">CON:</span> <b>Management Overhead.</b> Requires tracking two balances and managing an extra year-end tax form.</li>
-                <li><span class="con-label">CON:</span> <b>Transfer Latency.</b> Money moves between banks can take 1-2 days if you ever need to bridge the funds.</li>
+                <li><span class="pro-label">PRO:</span> <b>Yield Optimization.</b> Capturing a higher rate on the Booster account translates to roughly <b>$750 - $1,000</b> in extra "free" cash.</li>
+                <li><span class="pro-label">PRO:</span> <b>Psychological Moat.</b> The "Gold Line" (Savings) is never touched by the car payment, keeping it emotionally separate.</li>
+                <li><span class="con-label">CON:</span> <b>Management Overhead.</b> Requires checking two different apps and managing transfers between banks if needed.</li>
             </ul>
         </div>
     </div>
 
-    <div class="section-header">Amortization Schedule</div>
+    <div class="section-header">Full Amortization Schedule</div>
     <div class="table-container">
-        <table id="mainTable">
+        <table class="main-table" id="mainTable">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -135,7 +139,7 @@
     </div>
 
     <div class="tax-lesson" style="margin-top: 30px;">
-        💡 <b>Note on Inflation:</b> Because your loan is locked at <b>0.9%</b> and inflation is typically higher, you are paying back the debt with "cheaper" dollars over time while your HYSA interest maintains your purchasing power.
+        💡 <b>Tax Strategy:</b> This model assumes interest is taxed as ordinary income. By accounting for this now, the <b>Final Liquidity</b> figure represents actual cash you can spend, with the "IRS cut" already factored out.
     </div>
 </div>
 
@@ -161,9 +165,11 @@
         const tbody = document.querySelector('#mainTable tbody');
         tbody.innerHTML = '';
 
-        document.getElementById('start-total').innerText = format(hubStart + savStart);
+        // Update Start Table Rows
+        document.getElementById('start-sav-row').innerText = format(savStart);
+        document.getElementById('start-total-row').innerText = format(hubStart + savStart);
 
-        // Month 0 (April 2026)
+        // Month 0 Point
         addPoint("Apr 15, 2026", curL, curC, curH, curS);
 
         for (let i = 1; i <= loanMonths; i++) {
@@ -197,14 +203,15 @@
             row.innerHTML = `<td>${ds}</td><td>${format(l)}</td><td>${format(c)}</td><td>${format(h)}</td><td>${format(s)}</td><td>${format(h+s)}</td>`;
         }
 
-        document.getElementById('m-total').innerText = format(curH + curS);
-        document.getElementById('m-profit').innerText = format(tHubInt + tSavInt - tLoanInt);
+        // Update End Table Rows
+        document.getElementById('end-hysa-row').innerText = format(curH);
+        document.getElementById('end-sav-row').innerText = format(curS);
+        document.getElementById('end-total-row').innerText = format(curH + curS);
         
         document.getElementById('strategyKey').innerHTML = `
-            <strong>🔑 Executive Blueprint</strong><br>
-            • Cost of Debt (0.9% APR): <span style="color:var(--onyx-purple)">${format(tLoanInt)}</span><br>
-            • Total After-Tax Profit Generated: <span style="color:var(--onyx-green)">${format(tHubInt + tSavInt)}</span><br>
-            • <b>Net Wealth Gain: ${format(tHubInt + tSavInt - tLoanInt)}</b>
+            <strong>🔑 Strategic Blueprint</strong><br>
+            • Total After-Tax Profit Gained: <span style="color:var(--onyx-green)">${format(tHubInt + tSavInt)}</span><br>
+            • Net Wealth Increase (Interest - Loan Cost): <b>${format(tHubInt + tSavInt - tLoanInt)}</b>
         `;
 
         const ctx = document.getElementById('crossoverChart').getContext('2d');
