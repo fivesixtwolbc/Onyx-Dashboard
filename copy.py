@@ -68,7 +68,10 @@ current_hysa = hysa_initial
 total_loan_int = 0.0
 total_hysa_int = 0.0
 
-for month in range(1, loan_months + 1):
+# Set the exact date of your first payment
+start_date = pd.to_datetime("2026-05-15")
+
+for i in range(loan_months):
     # Loan Math
     interest_payment = current_loan * (loan_apr / 12)
     principal_payment = monthly_payment - interest_payment
@@ -80,8 +83,11 @@ for month in range(1, loan_months + 1):
     current_hysa = current_hysa - monthly_payment + hysa_replenishment + hysa_interest
     total_hysa_int += hysa_interest
     
+    # Calculate the exact date for this specific month
+    current_date = start_date + pd.DateOffset(months=i)
+    
     # Store Data
-    months.append(month)
+    months.append(current_date.strftime('%b %d, %Y')) # Formats as "May 15, 2026"
     loan_balances.append(max(0, current_loan))
     hysa_balances.append(current_hysa)
     cumulative_loan_interest.append(total_loan_int)
@@ -125,7 +131,7 @@ fig.update_layout(
     plot_bgcolor='#121212',
     paper_bgcolor='#121212',
     font=dict(color='#A0A0A0'),
-    xaxis=dict(title="Months", showgrid=False),
+    xaxis=dict(title="Payment Date", showgrid=False),
     yaxis=dict(title="Dollars ($)", showgrid=True, gridcolor='#333333', tickprefix="$"),
     hovermode="x unified",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
@@ -138,7 +144,7 @@ st.subheader("36-Month Amortization Schedule")
 
 # Build the DataFrame
 schedule_df = pd.DataFrame({
-    "Month": months,
+    "Payment Date": months,
     "Loan Balance": loan_balances,
     "Cumulative Loan Interest": cumulative_loan_interest,
     "HYSA Balance": hysa_balances,
