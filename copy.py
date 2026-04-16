@@ -171,4 +171,4 @@ styled_df = schedule_df.style.format({
     "After-Tax Net Spread": "${:,.2f}"
 })
 
-st.dataframe(styled_df, use_container_width=True, hide_index=True)
+st.dataframe(styled_df, use_container_width=True, hide_index=True, height=260)
