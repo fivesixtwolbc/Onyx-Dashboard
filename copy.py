@@ -143,7 +143,7 @@ schedule_df = pd.DataFrame({
     "Cumulative Loan Interest": cumulative_loan_interest,
     "HYSA Balance": hysa_balances,
     "Cumulative HYSA Interest": cumulative_hysa_interest,
-    "Net Spread": np.array(cumulative_hysa_interest) - np.array(cumulative_loan_interest)
+    "Net Spread": [hysa - loan for hysa, loan in zip(cumulative_hysa_interest, cumulative_loan_interest)]
 })
 
 # Format for clean display
