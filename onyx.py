@@ -172,3 +172,50 @@ styled_df = schedule_df.style.format({
 })
 
 st.dataframe(styled_df, use_container_width=True, hide_index=True, height=260)
+# --- POST-LOAN RECOVERY TRACKER ---
+st.divider()
+st.subheader("Post-Loan Capital Recovery Tracker")
+st.markdown("Calculate the timeline to rebuild the HYSA back to the original **$22,000** baseline after the Forester is paid off.")
+
+# The Post-Loan Slider
+post_loan_replenishment = st.slider(
+    "Post-Loan Monthly Contribution ($)", 
+    min_value=400, max_value=600, value=500, step=10
+)
+
+# Recovery Math Engine
+recovery_balance = hysa_balances[-1]
+recovery_months = 0
+recovery_date = pd.to_datetime(months[-1])
+
+# Loop to calculate months needed to reach the $22,000 initial pool
+if recovery_balance < hysa_initial:
+    while recovery_balance < hysa_initial:
+        recovery_interest = recovery_balance * (effective_apy / 12)
+        recovery_balance += post_loan_replenishment + recovery_interest
+        recovery_months += 1
+        recovery_date += pd.DateOffset(months=1)
+        
+        # Failsafe cap at 10 years
+        if recovery_months > 120:
+            break
+
+# Build the Recovery Summary Table
+recovery_df = pd.DataFrame({
+    "Strategic Metric": [
+        "End of Loan HYSA Balance",
+        "Target Capital Pool",
+        "Monthly Rebuild Contribution",
+        "Time to Full Recovery",
+        "Target Recovery Date"
+    ],
+    "Projection": [
+        f"${hysa_balances[-1]:,.2f}",
+        f"${hysa_initial:,.2f}",
+        f"${post_loan_replenishment:,.2f}",
+        f"{recovery_months} Months",
+        recovery_date.strftime('%b %d, %Y')
+    ]
+})
+
+st.table(recovery_df)
